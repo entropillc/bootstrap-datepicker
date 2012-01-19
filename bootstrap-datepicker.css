@@ -1,0 +1,129 @@
+input.datepicker + label.add-on > input {
+  display: none;
+}
+
+input.datepicker + label.add-on {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+input.datepicker:focus + label.add-on {
+  background-color: #ccc;
+  border: 1px solid #777;
+  -webkit-box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.8);
+}
+
+input.datepicker + label.add-on:before {
+  content: '';
+  background-image: url('images/calendar.png');
+  background-repeat: no-repeat;
+  display: block;
+  width: 18px;
+  height: 19px;
+  opacity: 0.7;
+}
+
+input.datepicker:focus + label.add-on:before {
+  background-position: 0 1px;
+}
+
+input.datepicker + label.add-on > div.calendar {
+  position: absolute;
+  right: -3px;
+  top: 27px;
+  width: 250px;
+  height: 0;
+  overflow: hidden;
+  z-index: 9999;
+  -webkit-transition: height 0.25s ease;
+  -moz-transition: height 0.25s ease;
+  -o-transition: height 0.25s ease;
+  transition: height 0.25s ease;
+}
+
+input.datepicker:focus + label.add-on > div.calendar {
+  height: 212px;
+}
+
+input.datepicker + label.add-on table {
+  background-color: #f9f9f9;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent #ddd #ddd;
+  width: 246px;
+  margin: 0 0 0 2px;
+  -webkit-border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+  -webkit-transform: translate3d(0, -100%, 0);
+  -moz-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  transform: translateY(-100%);
+  -webkit-transition: -webkit-transform 0.3s ease;
+  -moz-transition: -moz-transform 0.3s ease;
+  -o-transition: -o-transform 0.3s ease;
+  transition: transform 0.3s ease;
+}
+
+input.datepicker:focus + label.add-on table {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translateY(0);
+  -o-transform: translateY(0);
+  transform: translateY(0);
+}
+
+input.datepicker + label.add-on th, input.datepicker + label.add-on td {
+  border-width: 1px 1px 0 0;
+  border-style: solid solid none none;
+  border-color: #ddd #ddd transparent transparent;
+  color: #888;
+  font-size: 11px;
+  width: 34px;
+  padding: 4px;
+  text-align: center;
+}
+
+input.datepicker + label.add-on td:hover,
+input.datepicker + label.add-on th[data-value]:hover {
+  background-color: #ddd;
+  color: #444;
+}
+
+input.datepicker + label.add-on td.today {
+  background-color: #ccc;
+  color: #333;
+  -webkit-box-shadow: inset 0 1px 4px 1px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: inset 0 1px 4px 1px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 1px 4px 1px rgba(0, 0, 0, 0.8);
+}
+
+input.datepicker + label.add-on td.selected {
+  color: #fff;
+  background-color: #0064cd;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+  background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+  background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+  background-image: linear-gradient(top, #049cdb, #0064cd);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+input.datepicker + label.add-on tr:last-child > th {
+  padding: 0;
+}
