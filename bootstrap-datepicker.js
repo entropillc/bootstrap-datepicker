@@ -1,5 +1,6 @@
 var DatePicker = function(element) {
   var self = this;
+  var $window = $(window['addEventListener'] ? window : document.body);
   var $element = this.$element = $(element);
   var element = this.element = $element.get(0);
   var $labelElement = this.$labelElement = $element.siblings('label.add-on');
@@ -10,6 +11,12 @@ var DatePicker = function(element) {
   var format = $element.data('format');
   var year = value.getFullYear();
   var month = value.getMonth();
+  var isDraggingYear = false;
+  var isDraggingMonth = false;
+  var startDragYear = null;
+  var startDragMonth = null;
+  var startDragX = -1;
+  var startDragY = -1;
   
   this.setMonth(year, month);
   
@@ -61,10 +68,27 @@ var DatePicker = function(element) {
     var $this = $(this);
     var buttonValue = $this.data('value');
     
-    if (buttonValue) {
-      var year = self.year;
-      var month = self.month + parseInt(buttonValue, 10);
-      
+    if (!buttonValue) return;
+    
+    var year = self.year;
+    var month = self.month;
+
+    if (buttonValue === 'year') {
+      isDraggingYear = true;
+    } else if (buttonValue === 'month') {
+      isDraggingMonth = true;
+    }
+    
+    if (isDraggingYear || isDraggingMonth) {
+      startDragYear = year;
+      startDragMonth = month;
+      startDragX = evt.pageX;
+      startDragY = evt.pageY;
+    }
+    
+    else {
+      month += parseInt(buttonValue, 10);
+    
       if (month < 0) {
         month = 11;
         year--;
@@ -72,11 +96,41 @@ var DatePicker = function(element) {
         month = 0;
         year++;
       }
-      
+    
       self.setMonth(year, month);
     }
     
     return false;
+  });
+  
+  $window.bind('mousemove', function(evt) {
+    if (!isDraggingYear && !isDraggingMonth) return;
+    
+    var mouseX = evt.pageX;
+    var mouseY = evt.pageY;
+    var deltaX = mouseX - startDragX;
+    var deltaY = mouseY - startDragY;
+    var year = startDragYear;
+    var month = startDragMonth;
+    
+    if (isDraggingYear) {
+      year += Math.floor((deltaX + deltaY) / 16);
+    } else {
+      month += Math.floor((deltaX + deltaY) / 16);
+      year += Math.floor(month / 12);
+      month = month % 12;
+      month += (month < 0) ? 12 : 0;
+    }
+    
+    self.setMonth(year, month);
+  });
+  
+  $window.bind('mouseup', function(evt) {
+    if (!isDraggingYear && !isDraggingMonth) return;
+    
+    isDraggingYear = isDraggingMonth = false;
+    startDragYear = startDragMonth = null;
+    startDragX = startDragY = -1;
   });
 };
 
@@ -142,8 +196,8 @@ DatePicker.prototype = {
     var thead = '<thead>' +
       '<tr>' +
         '<th data-value="-1">&lt;</th>' +
-        '<th colspan="3" style="border-right: none;">' + this.getMonthNameByIndex(month) + '</th>' +
-        '<th colspan="2">' + year + '</th>' +
+        '<th data-value="month" colspan="3" style="border-right: none;">' + this.getMonthNameByIndex(month) + '</th>' +
+        '<th data-value="year" colspan="2">' + year + '</th>' +
         '<th data-value="1">&gt;</th>' +
       '</tr>' +
       '<tr>' +
