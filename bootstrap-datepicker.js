@@ -7,7 +7,7 @@ var DatePicker = function(element) {
   var labelElement = this.labelElement = $labelElement.get(0);
   var $calendarElement = this.$calendarElement = $labelElement.children('div.calendar');
   var calendarElement = this.calendarElement = $calendarElement.get(0);
-  var value = this.value;
+  var value = this.value = this.stringToDate($element.val()) || new Date();
   var format = $element.data('format');
   var year = value.getFullYear();
   var month = value.getMonth();
@@ -22,6 +22,16 @@ var DatePicker = function(element) {
   
   $element.bind('keydown keyup keypress', function(evt) {
     return false;
+  });
+  
+  $calendarElement.bind("webkitTransitionEnd transitionend oTransitionEnd transitionEnd", function(evt) {
+    if (!$element.is(':focus')) return;
+    
+    var value = self.value = self.stringToDate($element.val());
+    var year = value.getFullYear();
+    var month = value.getMonth();
+
+    self.setMonth(year, month);
   });
   
   $labelElement.bind('mousedown', function(evt) {
@@ -72,7 +82,7 @@ var DatePicker = function(element) {
     
     var year = self.year;
     var month = self.month;
-
+    
     if (buttonValue === 'year') {
       isDraggingYear = true;
     } else if (buttonValue === 'month') {
@@ -88,7 +98,7 @@ var DatePicker = function(element) {
     
     else {
       month += parseInt(buttonValue, 10);
-    
+      
       if (month < 0) {
         month = 11;
         year--;
@@ -96,7 +106,7 @@ var DatePicker = function(element) {
         month = 0;
         year++;
       }
-    
+      
       self.setMonth(year, month);
     }
     
@@ -132,6 +142,8 @@ var DatePicker = function(element) {
     startDragYear = startDragMonth = null;
     startDragX = startDragY = -1;
   });
+  
+  $element.data('datepicker', this);
 };
 
 DatePicker.prototype = {
@@ -141,7 +153,7 @@ DatePicker.prototype = {
   $labelElement: null,
   calendarElement: null,
   $calendarElement: null,
-  value: new Date(),
+  value: null,
   format: 'yyyy-mm-dd',
   year: 0,
   month: 0,
@@ -204,16 +216,16 @@ DatePicker.prototype = {
         '<th>S</th><th>M</th><th>T</th><th>W</th><th>H</th><th>F</th><th>S</th>' +
       '</tr>' +
     '</thead>';
-
+    
     var tbody = '<tbody>';
-
+    
     for (var week = 0; week < 6; week++) {
       tbody += '<tr>';
-
+      
       for (var day = 0; day < 7; day++) {
         if (date > 0 || day === firstDayOfWeek) {
           date++;
-
+          
           if (date <= daysInMonth) {
             tbody += '<td class="';
             
@@ -233,20 +245,33 @@ DatePicker.prototype = {
           tbody += '<td>&nbsp;</td>';
         }
       }
-
+      
       tbody += '</tr>';
     }
-
+    
     tbody += '</tbody>';
-
+    
     this.$calendarElement.html('<table>' + thead + tbody + '</table>');
     this.year = year;
     this.month = month;
-  }
+  },
+  dateToString: function(value) {
+    var year = value.getFullYear(); year = '' + year;
+    var month = value.getMonth() + 1; month = ((month < 10) ? '0' : '') + month;
+    var date = value.getDate(); date = ((date < 10) ? '0' : '') + date;
+    return year + '-' + month + '-' + date;
+  },
+  stringToDate: function(value) {
+    var dateParts = value.split('-'); if (dateParts.length !== 3) return null;
+    var year = parseInt(dateParts[0], 10);
+    var month = parseInt(dateParts[1], 10) - 1;
+    var date = parseInt(dateParts[2], 10);
+    return new Date(year, month, date);
+  },
 };
 
 $(function() {
-
+  
   var $datepickers = $('input.datepicker');
   $datepickers.each(function(index, element) { new DatePicker(element); });
   
