@@ -7,7 +7,7 @@ var DatePicker = function(element) {
   var labelElement = this.labelElement = $labelElement.get(0);
   var $calendarElement = this.$calendarElement = $labelElement.children('div.calendar');
   var calendarElement = this.calendarElement = $calendarElement.get(0);
-  var value = this.value = this.stringToDate($element.val()) || new Date();
+  var value = this.value = XDate($element.val())|| new XDate();
   var format = $element.data('format');
   var year = value.getFullYear();
   var month = value.getMonth();
@@ -27,7 +27,7 @@ var DatePicker = function(element) {
   $calendarElement.bind("webkitTransitionEnd transitionend oTransitionEnd transitionEnd", function(evt) {
     if (!$element.is(':focus')) return;
     
-    var value = self.value = self.stringToDate($element.val());
+    var value = self.value = XDate($element.val());
     var year = value.getFullYear();
     var month = value.getMonth();
 
@@ -46,26 +46,12 @@ var DatePicker = function(element) {
   
   $calendarElement.delegate('td', 'mousedown', function(evt) {
     var $this = $(this);
-    
-    value = self.value = new Date($this.data('year'), $this.data('month'), $this.data('date'));
+    value = self.value = new XDate($this.data('year'), $this.data('month'), $this.data('date'));
     
     $calendarElement.find('td.selected').removeClass('selected');
     $this.addClass('selected');
-    
-    var year = value.getFullYear() + '';
-    var month = value.getMonth() + 1 + '';
-    var date = value.getDate() + '';
-    var dateString = new String(format);
-    
-    dateString = dateString
-      .replace('yyyy', year)
-      .replace('yy', year.substring(2))
-      .replace('mm', month < 10 ? '0' + month : month)
-      .replace('m', month)
-      .replace('dd', date < 10 ? '0' + date : date)
-      .replace('d', date);
-    
-    $element.val(dateString);
+
+    $element.val(value.toString(format));
     
     setTimeout(function() {
       $element.blur();
@@ -189,7 +175,7 @@ DatePicker.prototype = {
     }
   },
   setMonth: function(year, month) {
-    var firstDateOfMonth = new Date(year, month, 1);
+    var firstDateOfMonth = new XDate(year, month, 1);
     var firstDayOfWeek = firstDateOfMonth.getDay();
     var daysInMonth = this.getDaysInMonth(year, month);
     
@@ -254,20 +240,7 @@ DatePicker.prototype = {
     this.$calendarElement.html('<table>' + thead + tbody + '</table>');
     this.year = year;
     this.month = month;
-  },
-  dateToString: function(value) {
-    var year = value.getFullYear(); year = '' + year;
-    var month = value.getMonth() + 1; month = ((month < 10) ? '0' : '') + month;
-    var date = value.getDate(); date = ((date < 10) ? '0' : '') + date;
-    return year + '-' + month + '-' + date;
-  },
-  stringToDate: function(value) {
-    var dateParts = value.split('-'); if (dateParts.length !== 3) return null;
-    var year = parseInt(dateParts[0], 10);
-    var month = parseInt(dateParts[1], 10) - 1;
-    var date = parseInt(dateParts[2], 10);
-    return new Date(year, month, date);
-  },
+  }
 };
 
 $(function() {
