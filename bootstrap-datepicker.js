@@ -1,7 +1,7 @@
 var DatePicker = function(element) {
   var self = this;
   var $window = $(window['addEventListener'] ? window : document.body);
-  var $element = this.$element = $(element);
+  var $element = this.$element = $(element).children('input:first-child');
   var element = this.element = $element.get(0);
   var $labelElement = this.$labelElement = $element.siblings('label.add-on');
   var labelElement = this.labelElement = $labelElement.get(0);
@@ -272,7 +272,7 @@ DatePicker.prototype = {
 
 $(function() {
   
-  var $datepickers = $('input.datepicker');
+  var $datepickers = $('.datepicker');
   $datepickers.each(function(index, element) { new DatePicker(element); });
   
 });
