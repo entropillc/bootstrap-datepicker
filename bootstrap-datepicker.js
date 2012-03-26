@@ -1,3 +1,5 @@
+'use strict';
+
 var DatePicker = function(element) {
   var self = this;
   var $window = $(window['addEventListener'] ? window : document.body);
@@ -28,6 +30,9 @@ var DatePicker = function(element) {
     if (!$element.is(':focus')) return;
     
     var value = self.value = self.stringToDate($element.val());
+    
+    if (!value) return;
+    
     var year = value.getFullYear();
     var month = value.getMonth();
 
