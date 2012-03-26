@@ -1,6 +1,7 @@
 div.datepicker {
   display: inline-block;
   position: relative;
+  margin-bottom: -5px;
 }
 
 div.datepicker > label.add-on {
